@@ -134,8 +134,9 @@ body {
     align-items: center;
     justify-content: center;
     box-shadow: 0 0 60px rgba(255, 255, 255, 0.3), inset 0 0 40px rgba(255, 255, 255, 0.1);
-    transition: var(--transition-smooth);
+    transition: transform ease-in-out, box-shadow 0.5s ease;
     position: relative;
+    transform: scale(1);
 }
 
 .breathing-circle::before {
@@ -162,25 +163,19 @@ body {
     transition: var(--transition-smooth);
 }
 
-/* Animations de respiration */
+/* Animations de respiration - utilise transitions pour synchronisation parfaite */
 .breathing-circle.inhale {
-    animation: inhale-animation var(--inhale-duration, 5s) ease-in-out;
+    transform: scale(1.5);
+    box-shadow: 0 0 100px rgba(255, 255, 255, 0.5), inset 0 0 60px rgba(255, 255, 255, 0.15);
 }
 
 .breathing-circle.exhale {
-    animation: exhale-animation var(--exhale-duration, 5s) ease-in-out;
+    transform: scale(0.7);
+    box-shadow: 0 0 40px rgba(255, 255, 255, 0.2), inset 0 0 20px rgba(255, 255, 255, 0.05);
 }
 
-@keyframes inhale-animation {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.4); }
-    100% { transform: scale(1); }
-}
-
-@keyframes exhale-animation {
-    0% { transform: scale(1); }
-    50% { transform: scale(0.75); }
-    100% { transform: scale(1); }
+.breathing-circle.hold {
+    /* Maintient la transformation actuelle */
 }
 
 .breath-text {

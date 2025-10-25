@@ -70,9 +70,13 @@ class CoherenceApp {
         this.closeSettings = document.getElementById('closeSettings');
         this.inhaleRange = document.getElementById('inhaleRange');
         this.exhaleRange = document.getElementById('exhaleRange');
+        this.holdInRange = document.getElementById('holdInRange');
+        this.holdOutRange = document.getElementById('holdOutRange');
         this.durationRange = document.getElementById('durationRange');
         this.inhaleValue = document.getElementById('inhaleValue');
         this.exhaleValue = document.getElementById('exhaleValue');
+        this.holdInValue = document.getElementById('holdInValue');
+        this.holdOutValue = document.getElementById('holdOutValue');
         this.durationValue = document.getElementById('durationValue');
         this.resetStatsBtn = document.getElementById('resetStats');
 
@@ -91,6 +95,8 @@ class CoherenceApp {
 
         this.inhaleRange.addEventListener('input', (e) => this.updateSetting('inhale', parseFloat(e.target.value)));
         this.exhaleRange.addEventListener('input', (e) => this.updateSetting('exhale', parseFloat(e.target.value)));
+        this.holdInRange.addEventListener('input', (e) => this.updateSetting('holdIn', parseFloat(e.target.value)));
+        this.holdOutRange.addEventListener('input', (e) => this.updateSetting('holdOut', parseFloat(e.target.value)));
         this.durationRange.addEventListener('input', (e) => this.updateSetting('duration', parseInt(e.target.value)));
 
         this.resetStatsBtn.addEventListener('click', () => this.resetStats());
@@ -101,6 +107,8 @@ class CoherenceApp {
         const defaults = {
             inhale: 5,
             exhale: 5,
+            holdIn: 0,  // rétention poumons pleins
+            holdOut: 0, // rétention poumons vides
             duration: 5 // en minutes
         };
         const saved = localStorage.getItem('coherence_settings');
@@ -125,10 +133,14 @@ class CoherenceApp {
     updateSettingsDisplay() {
         this.inhaleRange.value = this.settings.inhale;
         this.exhaleRange.value = this.settings.exhale;
+        this.holdInRange.value = this.settings.holdIn;
+        this.holdOutRange.value = this.settings.holdOut;
         this.durationRange.value = this.settings.duration;
 
         this.inhaleValue.textContent = `${this.settings.inhale}s`;
         this.exhaleValue.textContent = `${this.settings.exhale}s`;
+        this.holdInValue.textContent = this.settings.holdIn > 0 ? `${this.settings.holdIn}s` : 'Désactivé';
+        this.holdOutValue.textContent = this.settings.holdOut > 0 ? `${this.settings.holdOut}s` : 'Désactivé';
         this.durationValue.textContent = `${this.settings.duration} min`;
     }
 
@@ -236,7 +248,8 @@ class CoherenceApp {
         if (this.isPaused) {
             this.pauseBtn.textContent = 'Reprendre';
             this.breathText.textContent = 'En pause...';
-            this.breathingCircle.classList.remove('inhale', 'exhale', 'breathing');
+            this.breathingCircle.classList.remove('inhale', 'exhale', 'hold', 'breathing');
+            this.breathingCircle.style.transform = 'scale(1)';
             clearTimeout(this.breathTimer);
         } else {
             this.pauseBtn.textContent = 'Pause';
@@ -257,7 +270,8 @@ class CoherenceApp {
         clearInterval(this.sessionTimer);
 
         // Réinitialiser l'UI
-        this.breathingCircle.classList.remove('inhale', 'exhale', 'breathing');
+        this.breathingCircle.classList.remove('inhale', 'exhale', 'hold', 'breathing');
+        this.breathingCircle.style.transform = 'scale(1)';
         this.breathText.textContent = 'Prêt à recommencer ?';
         this.mantraText.textContent = '';
         this.startBtn.classList.remove('hidden');
@@ -292,7 +306,8 @@ class CoherenceApp {
 
         // Réinitialiser
         this.isRunning = false;
-        this.breathingCircle.classList.remove('inhale', 'exhale', 'breathing');
+        this.breathingCircle.classList.remove('inhale', 'exhale', 'hold', 'breathing');
+        this.breathingCircle.style.transform = 'scale(1)';
         this.startBtn.classList.remove('hidden');
         this.pauseBtn.classList.add('hidden');
         this.stopBtn.classList.add('hidden');
@@ -307,15 +322,35 @@ class CoherenceApp {
 
         this.currentPhase = 'inhale';
         this.breathText.textContent = 'Inspirez...';
-        this.breathingCircle.classList.remove('exhale');
+        this.breathingCircle.classList.remove('exhale', 'hold');
         this.breathingCircle.classList.add('inhale', 'breathing');
 
-        // Définir la durée CSS
-        this.breathingCircle.style.setProperty('--inhale-duration', `${this.settings.inhale}s`);
+        // Définir la durée de transition
+        this.breathingCircle.style.transitionDuration = `${this.settings.inhale}s`;
+
+        this.breathTimer = setTimeout(() => {
+            if (this.settings.holdIn > 0) {
+                this.startHoldIn();
+            } else {
+                this.startExhale();
+            }
+        }, this.settings.inhale * 1000);
+    }
+
+    startHoldIn() {
+        if (!this.isRunning || this.isPaused) return;
+
+        this.currentPhase = 'holdIn';
+        this.breathText.textContent = 'Retenez...';
+        this.breathingCircle.classList.remove('inhale');
+        this.breathingCircle.classList.add('hold');
+
+        // Maintenir la transformation
+        this.breathingCircle.style.transitionDuration = '0.3s';
 
         this.breathTimer = setTimeout(() => {
             this.startExhale();
-        }, this.settings.inhale * 1000);
+        }, this.settings.holdIn * 1000);
     }
 
     startExhale() {
@@ -323,23 +358,47 @@ class CoherenceApp {
 
         this.currentPhase = 'exhale';
         this.breathText.textContent = 'Expirez...';
-        this.breathingCircle.classList.remove('inhale');
+        this.breathingCircle.classList.remove('inhale', 'hold');
         this.breathingCircle.classList.add('exhale');
 
-        // Définir la durée CSS
-        this.breathingCircle.style.setProperty('--exhale-duration', `${this.settings.exhale}s`);
+        // Définir la durée de transition
+        this.breathingCircle.style.transitionDuration = `${this.settings.exhale}s`;
 
         this.breathTimer = setTimeout(() => {
-            this.cycleCount++;
-            this.updateCycleCounter();
-
-            // Changer de mantra tous les 3 cycles
-            if (this.cycleCount % 3 === 0) {
-                this.showRandomMantra();
+            if (this.settings.holdOut > 0) {
+                this.startHoldOut();
+            } else {
+                this.completeCycle();
             }
-
-            this.startBreathingCycle();
         }, this.settings.exhale * 1000);
+    }
+
+    startHoldOut() {
+        if (!this.isRunning || this.isPaused) return;
+
+        this.currentPhase = 'holdOut';
+        this.breathText.textContent = 'Retenez...';
+        this.breathingCircle.classList.remove('exhale');
+        this.breathingCircle.classList.add('hold');
+
+        // Maintenir la transformation
+        this.breathingCircle.style.transitionDuration = '0.3s';
+
+        this.breathTimer = setTimeout(() => {
+            this.completeCycle();
+        }, this.settings.holdOut * 1000);
+    }
+
+    completeCycle() {
+        this.cycleCount++;
+        this.updateCycleCounter();
+
+        // Changer de mantra tous les 3 cycles
+        if (this.cycleCount % 3 === 0) {
+            this.showRandomMantra();
+        }
+
+        this.startBreathingCycle();
     }
 
     // Timer de session
