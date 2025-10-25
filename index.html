@@ -40,10 +40,10 @@
         <!-- Zone principale de respiration -->
         <main class="main-area">
             <div class="breathing-container">
+                <div class="breath-text" id="breathText">Prêt à commencer ?</div>
                 <div class="breathing-circle" id="breathingCircle">
                     <div class="inner-circle"></div>
                 </div>
-                <div class="breath-text" id="breathText">Prêt à commencer ?</div>
                 <div class="mantra-text" id="mantraText"></div>
             </div>
 
@@ -63,7 +63,7 @@
         </main>
 
         <!-- Panel des paramètres -->
-        <div class="settings-panel hidden" id="settingsPanel">
+        <div class="settings-panel" id="settingsPanel">
             <div class="settings-content">
                 <div class="settings-header">
                     <h2>Paramètres</h2>
@@ -118,6 +118,38 @@
                             <span class="setting-value" id="durationValue">5 min</span>
                         </div>
                     </label>
+                </div>
+
+                <div class="settings-section">
+                    <label class="setting-label">
+                        <span>Thème de couleur</span>
+                    </label>
+                    <div class="theme-selector">
+                        <div class="theme-option" data-theme="purple">
+                            <div class="theme-preview" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"></div>
+                            <span>Violet Zen</span>
+                        </div>
+                        <div class="theme-option" data-theme="ocean">
+                            <div class="theme-preview" style="background: linear-gradient(135deg, #2E3192 0%, #1BFFFF 100%);"></div>
+                            <span>Océan</span>
+                        </div>
+                        <div class="theme-option" data-theme="sunset">
+                            <div class="theme-preview" style="background: linear-gradient(135deg, #FA8BFF 0%, #2BD2FF 90%, #2BFF88 100%);"></div>
+                            <span>Coucher de soleil</span>
+                        </div>
+                        <div class="theme-option" data-theme="forest">
+                            <div class="theme-preview" style="background: linear-gradient(135deg, #134E5E 0%, #71B280 100%);"></div>
+                            <span>Forêt</span>
+                        </div>
+                        <div class="theme-option" data-theme="fire">
+                            <div class="theme-preview" style="background: linear-gradient(135deg, #F09819 0%, #EDDE5D 100%);"></div>
+                            <span>Feu</span>
+                        </div>
+                        <div class="theme-option" data-theme="night">
+                            <div class="theme-preview" style="background: linear-gradient(135deg, #2C3E50 0%, #4CA1AF 100%);"></div>
+                            <span>Nuit</span>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="settings-section">

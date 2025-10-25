@@ -12,6 +12,46 @@
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Thème Ocean */
+body[data-theme="ocean"] {
+    --primary-color: #2E3192;
+    --secondary-color: #1BFFFF;
+    --accent-color: #4FC3F7;
+    --bg-gradient: linear-gradient(135deg, #2E3192 0%, #1BFFFF 100%);
+}
+
+/* Thème Sunset */
+body[data-theme="sunset"] {
+    --primary-color: #FA8BFF;
+    --secondary-color: #2BD2FF;
+    --accent-color: #2BFF88;
+    --bg-gradient: linear-gradient(135deg, #FA8BFF 0%, #2BD2FF 90%, #2BFF88 100%);
+}
+
+/* Thème Forest */
+body[data-theme="forest"] {
+    --primary-color: #134E5E;
+    --secondary-color: #71B280;
+    --accent-color: #A8E6CF;
+    --bg-gradient: linear-gradient(135deg, #134E5E 0%, #71B280 100%);
+}
+
+/* Thème Fire */
+body[data-theme="fire"] {
+    --primary-color: #F09819;
+    --secondary-color: #EDDE5D;
+    --accent-color: #FFB75E;
+    --bg-gradient: linear-gradient(135deg, #F09819 0%, #EDDE5D 100%);
+}
+
+/* Thème Night */
+body[data-theme="night"] {
+    --primary-color: #2C3E50;
+    --secondary-color: #4CA1AF;
+    --accent-color: #5DADE2;
+    --bg-gradient: linear-gradient(135deg, #2C3E50 0%, #4CA1AF 100%);
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -412,6 +452,50 @@ body {
     font-weight: 700;
     min-width: 60px;
     text-align: right;
+}
+
+/* Theme selector */
+.theme-selector {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.theme-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    border: 2px solid transparent;
+}
+
+.theme-option:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+.theme-option.active {
+    border-color: white;
+    background: rgba(255, 255, 255, 0.25);
+}
+
+.theme-preview {
+    width: 100%;
+    height: 60px;
+    border-radius: 8px;
+    box-shadow: var(--shadow-md);
+}
+
+.theme-option span {
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-align: center;
 }
 
 /* Achievement toast */

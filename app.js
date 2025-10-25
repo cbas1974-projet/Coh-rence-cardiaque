@@ -41,6 +41,7 @@ class CoherenceApp {
         this.attachEventListeners();
         this.updateStatsDisplay();
         this.updateSettingsDisplay();
+        this.applyTheme(this.settings.theme);
         this.checkStreak();
     }
 
@@ -100,6 +101,15 @@ class CoherenceApp {
         this.durationRange.addEventListener('input', (e) => this.updateSetting('duration', parseInt(e.target.value)));
 
         this.resetStatsBtn.addEventListener('click', () => this.resetStats());
+
+        // Theme selector
+        document.querySelectorAll('.theme-option').forEach(option => {
+            option.addEventListener('click', () => {
+                const theme = option.dataset.theme;
+                this.updateSetting('theme', theme);
+                this.applyTheme(theme);
+            });
+        });
     }
 
     // Gestion des paramètres
@@ -109,7 +119,8 @@ class CoherenceApp {
             exhale: 5,
             holdIn: 0,  // rétention poumons pleins
             holdOut: 0, // rétention poumons vides
-            duration: 5 // en minutes
+            duration: 5, // en minutes
+            theme: 'purple' // thème par défaut
         };
         const saved = localStorage.getItem('coherence_settings');
         return saved ? { ...defaults, ...JSON.parse(saved) } : defaults;
@@ -142,6 +153,19 @@ class CoherenceApp {
         this.holdInValue.textContent = this.settings.holdIn > 0 ? `${this.settings.holdIn}s` : 'Désactivé';
         this.holdOutValue.textContent = this.settings.holdOut > 0 ? `${this.settings.holdOut}s` : 'Désactivé';
         this.durationValue.textContent = `${this.settings.duration} min`;
+
+        // Update theme selection
+        document.querySelectorAll('.theme-option').forEach(option => {
+            if (option.dataset.theme === this.settings.theme) {
+                option.classList.add('active');
+            } else {
+                option.classList.remove('active');
+            }
+        });
+    }
+
+    applyTheme(theme) {
+        document.body.setAttribute('data-theme', theme);
     }
 
     // Gestion des statistiques
