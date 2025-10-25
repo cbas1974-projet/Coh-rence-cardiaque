@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cohérence Cardiaque - Respirez, Persévérez, Réussissez</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header avec stats -->
+        <header class="header">
+            <h1 class="logo">🫀 Cohérence Cardiaque</h1>
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <div class="stat-icon">🔥</div>
+                    <div class="stat-content">
+                        <div class="stat-label">Série</div>
+                        <div class="stat-value" id="streak">0</div>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">✨</div>
+                    <div class="stat-content">
+                        <div class="stat-label">Sessions</div>
+                        <div class="stat-value" id="totalSessions">0</div>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">⏱️</div>
+                    <div class="stat-content">
+                        <div class="stat-label">Temps total</div>
+                        <div class="stat-value" id="totalTime">0m</div>
+                    </div>
+                </div>
+            </div>
+            <button class="settings-btn" id="settingsBtn">⚙️</button>
+        </header>
+
+        <!-- Zone principale de respiration -->
+        <main class="main-area">
+            <div class="breathing-container">
+                <div class="breathing-circle" id="breathingCircle">
+                    <div class="inner-circle"></div>
+                </div>
+                <div class="breath-text" id="breathText">Prêt à commencer ?</div>
+                <div class="mantra-text" id="mantraText"></div>
+            </div>
+
+            <!-- Timer et contrôles -->
+            <div class="control-panel">
+                <div class="timer" id="timer">5:00</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="controls">
+                    <button class="btn btn-primary" id="startBtn">Commencer</button>
+                    <button class="btn btn-secondary hidden" id="pauseBtn">Pause</button>
+                    <button class="btn btn-tertiary hidden" id="stopBtn">Arrêter</button>
+                </div>
+                <div class="cycle-counter" id="cycleCounter">0 cycles</div>
+            </div>
+        </main>
+
+        <!-- Panel des paramètres -->
+        <div class="settings-panel hidden" id="settingsPanel">
+            <div class="settings-content">
+                <div class="settings-header">
+                    <h2>Paramètres</h2>
+                    <button class="close-btn" id="closeSettings">✕</button>
+                </div>
+
+                <div class="settings-section">
+                    <label class="setting-label">
+                        <span>Durée d'inspiration</span>
+                        <div class="setting-input-group">
+                            <input type="range" id="inhaleRange" min="2" max="10" value="5" step="0.5">
+                            <span class="setting-value" id="inhaleValue">5s</span>
+                        </div>
+                    </label>
+                </div>
+
+                <div class="settings-section">
+                    <label class="setting-label">
+                        <span>Durée d'expiration</span>
+                        <div class="setting-input-group">
+                            <input type="range" id="exhaleRange" min="2" max="10" value="5" step="0.5">
+                            <span class="setting-value" id="exhaleValue">5s</span>
+                        </div>
+                    </label>
+                </div>
+
+                <div class="settings-section">
+                    <label class="setting-label">
+                        <span>Durée de la session</span>
+                        <div class="setting-input-group">
+                            <input type="range" id="durationRange" min="1" max="30" value="5" step="1">
+                            <span class="setting-value" id="durationValue">5 min</span>
+                        </div>
+                    </label>
+                </div>
+
+                <div class="settings-section">
+                    <button class="btn btn-reset" id="resetStats">Réinitialiser les statistiques</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Messages de motivation -->
+        <div class="achievement-toast hidden" id="achievementToast"></div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
